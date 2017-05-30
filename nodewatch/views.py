@@ -75,6 +75,10 @@ class UptimeViewSet(ObservationViewSet):
     stats_fn = stats.uptime
 
 
+# TODO(heyzoos)
+# The blocks view is special in that statistics are recorded about individual
+# blocks. You need to be able to specify the block in the 'list', and 'create'
+# actions.
 # class BlocksViewSet(ObservationViewSet):
 #     category = 'blocks'
 #     stats_fn = stats.blockinfo
