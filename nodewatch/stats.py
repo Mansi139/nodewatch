@@ -272,3 +272,20 @@ def ip_route():
             results.append(result)
 
     return results
+
+
+def hostnamectl():
+    """Get the output of hostnamectl as a dictionary."""
+
+    output = subprocess.check_output(['hostnamectl'])
+    lines = output.decode('utf-8').split('\n')
+
+    result = {}
+    for line in lines:
+        # Filters out ""
+        if not line:
+            continue
+        k, v = line.split(':')
+        result[k.strip()] = v.strip()
+
+    return result
