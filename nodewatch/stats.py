@@ -152,18 +152,6 @@ def mounts():
 
     return results
 
-def uptime():
-    fields = readtext('/proc/uptime').split()
-    var1 = float(fields[0])
-    var2 = float(fields[1])
-
-    res =  '{ "idle": '  + str(float(fields[0])) + ', "uptime": ' +  str(float(fields[1])) + ' }'
-
-    return {
-        'uptime': float(fields[0]),
-        'idle': float(fields[1]),
-    }
-
 
 def listblocks():
     return os.listdir('/sys/block')
@@ -289,3 +277,23 @@ def hostnamectl():
         result[k.strip()] = v.strip()
 
     return result
+
+
+def boot_times():
+    """Get the output of journalctl to list reboot times."""
+    output = subprocess.check_output(['journalctl', '--list-boots'])
+    return output.decode('utf-8').strip().split('\n')
+
+
+def uptime():
+    fields = readtext('/proc/uptime').split()
+    var1 = float(fields[0])
+    var2 = float(fields[1])
+
+    res =  '{ "idle": '  + str(float(fields[0])) + ', "uptime": ' +  str(float(fields[1])) + ' }'
+
+    return {
+        'uptime': float(fields[0]),
+        'idle': float(fields[1]),
+        'boot_times': boot_times()
+    }
