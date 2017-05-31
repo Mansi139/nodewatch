@@ -94,9 +94,14 @@ class HostnamectlViewSet(ObservationViewSet):
     stats_fn = stats.hostnamectl
 
 
+class DfViewSet(ObservationViewSet):
+    category = 'df'
+    stats_fn = stats.df
+
+
 view_sets = [LoadAvgViewSet, CpuViewSet, MemViewSet, MountsViewSet]
 view_sets += [IPRouteViewSet, UptimeViewSet, DevicesViewSet]
-view_sets += [HostnamectlViewSet]
+view_sets += [HostnamectlViewSet, DfViewSet]
 
 # http://www.django-rest-framework.org/api-guide/routers/#defaultrouter
 # Provides functionality for automatically mapping view logic to urls. The

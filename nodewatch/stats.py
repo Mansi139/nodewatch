@@ -297,3 +297,24 @@ def uptime():
         'idle': float(fields[1]),
         'boot_times': boot_times()
     }
+
+
+def df():
+    """Report file system disk space usage."""
+
+    output = subprocess.check_output(['df', '-H'])
+    lines = output.decode('utf-8').strip().split('\n')
+
+    results = []
+    for line in lines[1:]:  # [1:] skips the header
+        values = line.split()
+        results.append({
+            'filesystem': values[0],
+            'size': values[1],
+            'used': values[2],
+            'avail': values[3],
+            'use%': values[4],
+            'mount': values[5]
+        })
+
+    return results
