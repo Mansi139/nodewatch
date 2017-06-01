@@ -152,18 +152,6 @@ def mounts():
 
     return results
 
-def uptime():
-    fields = readtext('/proc/uptime').split()
-    var1 = float(fields[0])
-    var2 = float(fields[1])
-
-    res =  '{ "idle": '  + str(float(fields[0])) + ', "uptime": ' +  str(float(fields[1])) + ' }'
-
-    return {
-        'uptime': float(fields[0]),
-        'idle': float(fields[1]),
-    }
-
 
 def listblocks():
     return os.listdir('/sys/block')
@@ -270,5 +258,63 @@ def ip_route():
             result['mask'] = ipv4_to_str(hex_to_ipv4(mask))
 
             results.append(result)
+
+    return results
+
+
+def hostnamectl():
+    """Get the output of hostnamectl as a dictionary."""
+
+    output = subprocess.check_output(['hostnamectl'])
+    lines = output.decode('utf-8').split('\n')
+
+    result = {}
+    for line in lines:
+        # Filters out ""
+        if not line:
+            continue
+        k, v = line.split(':')
+        result[k.strip()] = v.strip()
+
+    return result
+
+
+def boot_times():
+    """Get the output of journalctl to list reboot times."""
+    output = subprocess.check_output(['journalctl', '--list-boots'])
+    return output.decode('utf-8').strip().split('\n')
+
+
+def uptime():
+    fields = readtext('/proc/uptime').split()
+    var1 = float(fields[0])
+    var2 = float(fields[1])
+
+    res =  '{ "idle": '  + str(float(fields[0])) + ', "uptime": ' +  str(float(fields[1])) + ' }'
+
+    return {
+        'uptime': float(fields[0]),
+        'idle': float(fields[1]),
+        'boot_times': boot_times()
+    }
+
+
+def df():
+    """Report file system disk space usage."""
+
+    output = subprocess.check_output(['df', '-H'])
+    lines = output.decode('utf-8').strip().split('\n')
+
+    results = []
+    for line in lines[1:]:  # [1:] skips the header
+        values = line.split()
+        results.append({
+            'filesystem': values[0],
+            'size': values[1],
+            'used': values[2],
+            'avail': values[3],
+            'use%': values[4],
+            'mount': values[5]
+        })
 
     return results

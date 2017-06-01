@@ -89,14 +89,19 @@ class DevicesViewSet(ObservationViewSet):
     stats_fn = stats.devices
 
 
-class MachineIDViewSet(ObservationViewSet):
-    category = 'machineid'
-    stats_fn = stats.machineid
+class HostnamectlViewSet(ObservationViewSet):
+    category = 'hostnamectl'
+    stats_fn = stats.hostnamectl
+
+
+class DfViewSet(ObservationViewSet):
+    category = 'df'
+    stats_fn = stats.df
 
 
 view_sets = [LoadAvgViewSet, CpuViewSet, MemViewSet, MountsViewSet]
 view_sets += [IPRouteViewSet, UptimeViewSet, DevicesViewSet]
-view_sets += [MachineIDViewSet]
+view_sets += [HostnamectlViewSet, DfViewSet]
 
 # http://www.django-rest-framework.org/api-guide/routers/#defaultrouter
 # Provides functionality for automatically mapping view logic to urls. The
