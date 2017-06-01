@@ -1,0 +1,6 @@
+[Unit]
+Description=log
+
+[Service]
+ExecStart=/usr/bin/python3 /home/jesse/Downloads/nodewatch/manage.py runserver
+
