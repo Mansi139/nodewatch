@@ -1,10 +1,15 @@
+import arrow
+
+from arrow.parser import ParserError
+from django.http import JsonResponse
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
 from rest_framework.viewsets import ModelViewSet
 
-from datetime import datetime
 from nodewatch import stats
 from nodewatch.models import Observation
 from nodewatch.serializers import ObservationSerializer
@@ -33,7 +38,7 @@ class ObservationViewSet(ModelViewSet):
     def create(self, request):
         observation = Observation.objects.create(
             category=self.category,
-            datetime=datetime.utcnow(),
+            datetime=timezone.now(),
             data=self.__class__.stats_fn()
         )
 
@@ -110,3 +115,23 @@ view_sets += [HostnamectlViewSet, DfViewSet]
 router = DefaultRouter()
 for view in view_sets:
     router.register(view.category, view, base_name=view.category)
+
+
+def truncate(request):
+    """For datetime-based maintenance of the size of the sqlite database. When
+    no datetime is provided to this view, it defauls to dropping observations
+    over a week old."""
+
+    errors = []
+
+    datetime = arrow.utcnow().replace(weeks=-1)
+    if request.GET.get('datetime'):
+        try:
+            datetime = arrow.get(request.GET.get('datetime'))
+        except ParserError:
+            errors.append({'status': 400, 'detail': 'Invalid datetime'})
+            return JsonResponse(data={"errors": errors}, status=400)
+
+    Observation.objects.filter(datetime__lt=datetime.datetime).delete()
+    count = Observation.objects.count()
+    return JsonResponse(data={"current_observation_count": count})

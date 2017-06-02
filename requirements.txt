@@ -1,3 +1,4 @@
+arrow==0.10.0
 django==1.8
 djangorestframework==3.6.2
 jsonfield==2.0.1

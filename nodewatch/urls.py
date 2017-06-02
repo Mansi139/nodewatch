@@ -16,9 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from nodewatch.views import router
+from nodewatch.views import router, truncate
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^truncate', truncate),
     url(r'^admin/', admin.site.urls),
 ]
