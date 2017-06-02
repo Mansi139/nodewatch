@@ -56,7 +56,7 @@ ROOT_URLCONF = 'nodewatch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['dist/rest_framework_templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
