@@ -19,7 +19,7 @@ echo "Package: nodewatch" >> deb_build/DEBIAN/control
 echo "Maintainer: nodewatch" >> deb_build/DEBIAN/control
 echo "Description: nodewatch" >> deb_build/DEBIAN/control
 echo "Version: 0.0.0" >> deb_build/DEBIAN/control
-echo "Architecture: i386" >> deb_build/DEBIAN/control
+echo "Architecture: armhf" >> deb_build/DEBIAN/control
 
 echo "mv nodewatch.service /etc/systemd/system/" >> deb_build/DEBIAN/postinst
 echo "systemctl start nodewatch" >> deb_build/DEBIAN/postinst
